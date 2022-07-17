@@ -312,7 +312,6 @@ void rb_erase_balance(struct rbnode *p, struct rbroot *root)
     /*
      * Loop invariants:
      * - node is black (or NULL on first iteration)
-     * - node is not the root (parent is not NULL)
      * - All leafs(NIL) paths going through parent and node have a
      *   black node count that is 1 lower than other leaf paths
      */
@@ -432,7 +431,9 @@ void rb_erase_balance(struct rbnode *p, struct rbroot *root)
          *               D
          *
          */
-        if (rb_is_black(s) && rb_is_red(sc) && rb_is_black(sd)) {
+        if (rb_is_red(sc) && rb_is_black(sd)) {
+            assert(rb_is_black(s));
+
             rb_set_red(s);
             rb_set_black(sc);
             if (p->left == n) {
